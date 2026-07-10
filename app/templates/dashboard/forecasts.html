@@ -1,0 +1,161 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Pronósticos{% endblock %}
+{% block content %}
+<!-- CSS de Litepicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
+<!-- JS de Litepicker -->
+<script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+<!-- JS de Plotly -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+
+  <!-- Primera fila -->
+  <div class="grid grid-cols-2 gap-6">
+    <!-- Selector de sensor -->
+    <div class="flex flex-col">
+      <label for="sensorSelect" class="mb-2">Seleccionar Sensor</label>
+      <select id="sensorSelect" class="bg-gray-800 text-gray-100 p-2 rounded">
+        <option value="S1">Sensor 1</option>
+        <option value="S2">Sensor 2</option>
+        <option value="S3">Sensor 3</option>
+      </select>
+    </div>
+    
+    <!-- Calendario popup -->
+    <div class="flex flex-col">
+      <label class="mb-2">Seleccionar Periodo</label>
+      <input type="text" id="calendarInput" class="bg-gray-800 text-gray-100 p-2 rounded" placeholder="Haz click para elegir rango">
+    </div>
+  </div>
+
+  <!-- Modal con spinner que cubre toda la vista -->
+  <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center z-50">
+    <div class="text-center">
+      <div class="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 mx-auto mb-4 animate-spin"></div>
+      <p class="text-gray-100 text-lg font-bold">Realizando predicción...</p>
+    </div>
+  </div>
+
+  <!-- Segunda fila -->
+  <div class="grid grid-cols-2 gap-6">
+    <div id="lineForecast" class="w-full h-80"></div>
+    <div id="scatterNebula" class="w-full h-80"></div>
+    <div id="correlationChart" class="w-full h-80"></div>
+    <div id="confusionMatrix" class="w-full h-80"></div>
+  </div>
+</div>
+
+<script>
+// Datos simulados por sensor con fechas
+const sensors = {
+  S1: { 
+    fechas:['2026-07-01','2026-07-02','2026-07-03','2026-07-04','2026-07-05'],
+    lineReal:[10,12,15,14,13], linePred:[11,13,14,15,14],
+    scatterX:[1,2,3,4,5], scatterY:[2,3,2.5,4,3.5],
+    corrX:[1,2,3,4,5], corrY:[2,4,6,8,10],
+    confusion:[[50,10],[5,35]]
+  },
+  S2: { 
+    fechas:['2026-07-01','2026-07-02','2026-07-03','2026-07-04','2026-07-05'],
+    lineReal:[8,9,11,10,12], linePred:[9,10,12,11,13],
+    scatterX:[1,2,3,4,5], scatterY:[1.5,2.5,3.5,2,4],
+    corrX:[1,2,3,4], corrY:[2,3,5,7],
+    confusion:[[40,15],[10,30]]
+  },
+  S3: { 
+    fechas:['2026-07-01','2026-07-02','2026-07-03','2026-07-04','2026-07-05'],
+    lineReal:[15,14,16,17,18], linePred:[16,15,17,18,19],
+    scatterX:[2,4,6,8,10], scatterY:[3,5,7,6,8],
+    corrX:[1,2,3], corrY:[2,2.5,3],
+    confusion:[[45,20],[15,25]]
+  }
+};
+
+// Renderizar gráficos con rango
+function renderForecast(sensorKey, rango=null){
+  const s = sensors[sensorKey];
+  let fechas = s.fechas;
+  let real = s.lineReal;
+  let pred = s.linePred;
+
+  // Filtrar por rango si existe
+  if(rango){
+    fechas = fechas.filter(f=> f>=rango.inicio && f<=rango.fin);
+    const idxInicio = s.fechas.indexOf(fechas[0]);
+    const idxFin = s.fechas.indexOf(fechas[fechas.length-1]);
+    real = s.lineReal.slice(idxInicio, idxFin+1);
+    pred = s.linePred.slice(idxInicio, idxFin+1);
+  }
+
+  // Gráfico de línea
+  Plotly.newPlot('lineForecast', [
+    { x:fechas, y:real, mode:'lines+markers', name:'Real', line:{color:'#36a2eb'} },
+    { x:fechas, y:pred, mode:'lines+markers', name:'Predicho', line:{color:'#ff6384'} }
+  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Forecast '+sensorKey, font:{color:'#eee'}} });
+
+  // Gráfico de dispersión (filtrado por rango simulando que scatterX son fechas)
+  let scatterX = s.scatterX;
+  let scatterY = s.scatterY;
+  if(rango){
+    scatterX = scatterX.filter((_,i)=> s.fechas[i]>=rango.inicio && s.fechas[i]<=rango.fin);
+    scatterY = scatterY.slice(0, scatterX.length);
+  }
+  Plotly.newPlot('scatterNebula', [{
+    x:scatterX, y:scatterY, mode:'markers',
+    marker:{ size:scatterX.map(v=>v*5), color:'#4bc0c0', opacity:0.6 }
+  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Dispersión '+sensorKey, font:{color:'#eee'}} });
+
+  // Gráfico de correlación (filtrado por rango simulando)
+  let corrX = s.corrX;
+  let corrY = s.corrY;
+  if(rango){
+    corrX = corrX.filter((_,i)=> s.fechas[i]>=rango.inicio && s.fechas[i]<=rango.fin);
+    corrY = corrY.slice(0, corrX.length);
+  }
+  Plotly.newPlot('correlationChart', [{
+    x:corrX, y:corrY, mode:'markers', marker:{color:'#cc65fe'}
+  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Correlación '+sensorKey, font:{color:'#eee'}} });
+
+  // Matriz de confusión (puede recalcularse según rango, aquí se muestra completa)
+  Plotly.newPlot('confusionMatrix', [{
+    z:s.confusion, type:'heatmap', colorscale:'Viridis',
+    text:[['TP','FN'],['FP','TN']], hoverinfo:'text+z'
+  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Matriz '+sensorKey, font:{color:'#eee'}} });
+}
+
+// Render inicial
+renderForecast('S1');
+
+// Evento selector de sensor
+document.getElementById('sensorSelect').addEventListener('change',(e)=>{
+  renderForecast(e.target.value);
+});
+
+// Inicializar calendario Litepicker como popup
+const picker = new Litepicker({
+  element: document.getElementById('calendarInput'),
+  singleMode: false,
+  numberOfMonths: 2,
+  numberOfColumns: 2,
+  autoApply: true,
+  format: 'YYYY-MM-DD'
+});
+
+// Evento al seleccionar rango
+picker.on('selected', (startDate, endDate) => {
+  document.getElementById('loadingModal').classList.remove('hidden');
+  setTimeout(()=>{
+    document.getElementById('loadingModal').classList.add('hidden');
+    const sensorKey = document.getElementById('sensorSelect').value;
+    const rango = { inicio:startDate.format('YYYY-MM-DD'), fin:endDate.format('YYYY-MM-DD') };
+    renderForecast(sensorKey, rango);
+  },2000);
+});
+</script>
+
+
+
+
+{% endblock %}

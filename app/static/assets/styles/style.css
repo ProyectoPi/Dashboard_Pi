@@ -1,0 +1,64 @@
+ /* Custom styles */
+
+ html {
+     scroll-behavior: smooth;
+ }
+
+ .glass-card {
+     padding: 20px;
+     background: rgba(255, 255, 255, .06);
+     border: 1px solid rgba(255, 255, 255, .1);
+     backdrop-filter: blur(20px);
+     border-radius: 20px;
+     color: white;
+     display: flex;
+     align-items: center;
+     gap: 15px;
+ }
+
+ .card-stat {
+     padding: 20px;
+     border-radius: 20px;
+     background: #f8fafc;
+     text-align: center;
+ }
+
+ .card-stat h3 {
+     font-size: 2rem;
+     font-weight: bold;
+ }
+
+ .logo-item {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-weight: 700;
+     color: #64748b;
+ }
+
+ .app-card {
+     overflow: hidden;
+     border-radius: 24px;
+     background: white;
+     box-shadow: 0 20px 40px rgba(0, 0, 0, .08);
+ }
+
+ .app-card img {
+     height: 250px;
+     width: 100%;
+     object-fit: cover;
+ }
+
+ .app-card h3 {
+     padding: 20px;
+     font-size: 1.3rem;
+     font-weight: 600;
+ }
+
+ .hover-application {
+        transition: transform 0.3s ease;
+}
+
+ .hover-application:hover {
+    transform: translateY(-10px);
+}

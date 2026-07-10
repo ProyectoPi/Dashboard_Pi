@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <!-- MapLibre -->
+  <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css' />
+  <script src='https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js'></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Plotly JS -->
+  <script src="https://cdn.plot.ly/plotly-3.6.0.min.js" charset="utf-8"></script>
+  <!-- Style -->
+  <style>
+    html,
+    body,
+    #map {
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 flex h-screen">
+
+  <!-- Menú lateral -->
+  <aside id="sidebar" class="w-64 bg-gray-800 text-gray-200 flex flex-col transition-all duration-300">
+    <div class="p-6 text-2xl font-bold border-b border-gray-700 flex justify-between items-center">
+      <span><img class="brightness-0 invert" src="{{ url_for('static', filename='assets/img/logo_pi.png') }}"
+          alt=""></span>
+      <!-- <button id="toggleSidebar" class="text-sm bg-gray-700 px-2 py-1 rounded">⇔</button> -->
+    </div>
+    <nav class="flex-1 p-4 space-y-2">
+      <a href="{{ url_for('admin.dashboard') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Inicio</a>
+      <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Usuarios</a>
+      <a href="{{ url_for('admin.projects') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Proyectos</a>
+      <!--  -->
+      <a href="{{ url_for('admin.structure') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Estructuras</a>
+      <a href="{{ url_for('admin.map') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Localización</a>
+      <a href="{{ url_for('admin.charts') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Gráficos</a>
+      <a href="{{ url_for('admin.matrixes') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Matrices</a>
+      <a href="{{ url_for('admin.comparisons') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Comparaciones</a>
+      <a href="{{ url_for('admin.forecasts') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Predicciones</a>
+    </nav>
+  </aside>
+
+  <!-- Contenedor principal -->
+  <div class="flex-1 flex flex-col">
+    <!-- Menú superior -->
+    <header class="bg-gray-800 shadow p-5 flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Panel de Control</h1>
+      <!-- Dropdown perfil -->
+      <div class="relative">
+        <button id="profileBtn" class="bg-black-600 text-white px-4 py-2 rounded">
+          {{ user.username }} ▼
+        </button>
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-40 bg-gray-700 rounded shadow-lg">
+          <a href="#" class="block px-4 py-2 hover:bg-gray-600">Perfil</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-600">Configuración</a>
+          <a href="/logout" class="block px-4 py-2 hover:bg-gray-600">Cerrar sesión</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Dropdown perfil
+    // const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    profileBtn.addEventListener("click", () => dropdownMenu.classList.toggle("hidden"));
+
+    // Sidebar toggle
+    // const toggleSidebar = document.getElementById("toggleSidebar");
+    // const sidebar = document.getElementById("sidebar");
+    // toggleSidebar.addEventListener("click", () => {
+    //   sidebar.classList.toggle("w-64");
+    //   sidebar.classList.toggle("w-20");
+    // });
+
+
+    // Maps
+
+    if (document.getElementById('map')) {
+
+      const map = new maplibregl.Map({
+        container: 'map',
+        zoom: 12,
+        center: [11.39085, 47.27574],
+        pitch: 70,
+        hash: true,
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: 'raster',
+              tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              attribution: '&copy; OpenStreetMap Contributors',
+              maxzoom: 19
+            },
+            // Use a different source for terrain and hillshade layers, to improve render quality
+            terrainSource: {
+              type: 'raster-dem',
+              url: 'https://tiles.mapterhorn.com/tilejson.json'
+            },
+            hillshadeSource: {
+              type: 'raster-dem',
+              url: 'https://tiles.mapterhorn.com/tilejson.json'
+            }
+          },
+          layers: [
+            {
+              id: 'osm',
+              type: 'raster',
+              source: 'osm'
+            },
+            {
+              id: 'hills',
+              type: 'hillshade',
+              source: 'hillshadeSource',
+              layout: { visibility: 'visible' },
+              paint: { 'hillshade-shadow-color': '#473B24' }
+            }
+          ],
+          terrain: {
+            source: 'terrainSource',
+            exaggeration: 1
+          },
+          sky: {}
+        },
+        maxZoom: 18,
+        maxPitch: 85
+      });
+
+      map.addControl(
+        new maplibregl.NavigationControl({
+          visualizePitch: true,
+          showZoom: true,
+          showCompass: true
+        })
+      );
+
+      map.addControl(
+        new maplibregl.TerrainControl({
+          source: 'terrainSource',
+          exaggeration: 1
+        })
+      );
+
+      map.addControl(
+        new maplibregl.GlobeControl()
+      );
+
+      map.on('load', () => {
+        map.addSource('contours', {
+          type: 'vector',
+          url:
+            'https://api.maptiler.com/tiles/contours/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
+        });
+        map.addLayer({
+          'id': 'contour-lines',
+          'type': 'line',
+          'source': 'contours',
+          'source-layer': 'contour',
+          'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          'paint': {
+            'line-color': '#ff69b4',
+            'line-width': 1
+          }
+        });
+
+        map.addLayer({
+          'id': 'contour-labels',
+          'type': 'symbol',
+          'source': 'contours',
+          'source-layer': 'contour',
+          "layout": {
+            "text-field": "{height}",
+            "symbol-placement": "line",
+            "text-font": ["Noto Sans Regular"],
+          },
+          'paint': {
+            'text-color': '#ff69b4',
+          }
+        });
+      });
+
+      // The 'building' layer in the streets vector source contains building-height
+      // data from OpenStreetMap.
+      map.on('load', () => {
+        // Insert the layer beneath any symbol layer.
+        const layers = map.getStyle().layers;
+
+        let labelLayerId;
+        for (let i = 0; i < layers.length; i++) {
+          if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+            labelLayerId = layers[i].id;
+            break;
+          }
+        }
+
+        map.addSource('openfreemap', {
+          url: `https://tiles.openfreemap.org/planet`,
+          type: 'vector',
+        });
+
+        map.addLayer(
+          {
+            'id': '3d-buildings',
+            'source': 'openfreemap',
+            'source-layer': 'building',
+            'type': 'fill-extrusion',
+            'minzoom': 15,
+            'filter': ['!=', ['get', 'hide_3d'], true],
+            'paint': {
+              'fill-extrusion-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'render_height'], 0, 'lightgray', 200, 'royalblue', 400, 'lightblue'
+              ],
+              'fill-extrusion-height': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                15,
+                0,
+                16,
+                ['get', 'render_height']
+              ],
+              'fill-extrusion-base': ['case',
+                ['>=', ['get', 'zoom'], 16],
+                ['get', 'render_min_height'], 0
+              ]
+            }
+          },
+          labelLayerId
+        );
+      });
+
+      // Plot indicators
+
+      function updateIndicador(tipo) {
+        let data;
+        if (tipo === "ventas") {
+          data = [{ type: "bar", x: ["Ene", "Feb", "Mar"], y: [12000, 15000, 18000], marker: { color: "blue" } }];
+        } else if (tipo === "tickets") {
+          data = [{ type: "scatter", mode: "lines+markers", x: [1, 2, 3, 4], y: [5, 12, 8, 10], line: { color: "green" } }];
+        } else if (tipo === "alertas") {
+          data = [{ type: "pie", labels: ["Críticas", "Medias", "Bajas"], values: [3, 7, 15], marker: { colors: ["red", "orange", "yellow"] } }];
+        }
+        Plotly.newPlot("graficoIndicador", data, {
+          paper_bgcolor: "rgba(31,41,55,1)",
+          plot_bgcolor: "rgba(17,24,39,1)",
+          font: { color: "white" }
+        }, { responsive: true });
+      }
+
+      // Inicializar con ventas al cargar la página
+      window.onload = function () {
+        updateIndicador("ventas");
+      };
+
+    }
+
+
+    if (document.getElementById('mapaMundi')) {
+
+      // Plotly ejemplos
+      Plotly.newPlot("mapaMundi", [{
+        type: "scattergeo",
+        mode: "markers",
+        locations: ["COL", "USA", "BRA", "ESP", "JPN"],
+        marker: { size: 12, color: "cyan" }
+      }], {
+        geo: {
+          projection: { type: "orthographic" },
+          bgcolor: "transparent", // fondo del mapa (gris muy oscuro) rgba(17,24,39,1)
+          // showframe: true,
+          // showcoastlines: true,
+          coastlinecolor: "black",    // líneas de costa en negro
+          showland: true,
+          landcolor: "rgba(50,50,50,1)", // color de tierra oscuro
+          // showocean: true,
+          // oceancolor: "rgba(20,20,20,1)" // océano oscuro
+        },
+        paper_bgcolor: "rgba(0,0,0,0)", // fondo del contenedor (bg-gray-800) rgba(31,41,55,1)
+        plot_bgcolor: "rgba(0,0,0,0)",  // fondo del área de trazado (bg-gray-900) rgba(17,24,39,1)
+        font: { color: "white" },
+        margin: { t: 0, b: 0, l: 0, r: 0 }
+      });
+
+      Plotly.newPlot("indicadoresGrafico", [{
+        type: "bar",
+        x: ["Ventas", "Tickets", "Alertas"],
+        y: [45000, 12000, 30000],
+        marker: { color: ["green", "yellow", "red"] }
+      }], {
+        paper_bgcolor: "rgba(0,0,0,0)", // rgba(31, 41, 55, 1)
+        plot_bgcolor: "rgba(0,0,0,0)", // rgba(17, 24, 39, 1)
+        font: { color: "white" }
+      });
+
+      Plotly.newPlot("estimadoresIzq", [{
+        type: "scatter",
+        mode: "lines+markers",
+        x: [1, 2, 3, 4, 5],
+        y: [10, 15, 13, 17, 22],
+        line: { color: "orange" }
+      }], {
+        paper_bgcolor: "rgba(0,0,0,0)", // rgba(31, 41, 55, 1)
+        plot_bgcolor: "rgba(0,0,0,0)", // rgba(17, 24, 39, 1)
+        font: { color: "white" }
+      });
+
+      Plotly.newPlot("estimadoresDer", [{
+        type: "pie",
+        labels: ["A", "B", "C"],
+        values: [30, 50, 20],
+        marker: { colors: ["#3b82f6", "#10b981", "#ef4444"] }
+      }], {
+        paper_bgcolor: "rgba(31, 41, 55, 1)",
+        font: { color: "white" }
+      });
+
+    }
+
+
+  </script>
+</body>
+
+</html>

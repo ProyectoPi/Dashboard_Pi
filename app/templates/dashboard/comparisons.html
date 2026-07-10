@@ -1,0 +1,228 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Comparaciones{% endblock %}
+{% block content %}
+
+<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+  <!-- Selectores -->
+  <div class="grid grid-cols-2 gap-6">
+    <div class="flex flex-col">
+      <label for="systemA" class="mb-2">Seleccionar Sistema A</label>
+      <select id="systemA" class="bg-gray-800 text-gray-100 p-2 rounded">
+        <option value="A">Sistema A</option>
+        <option value="B">Sistema B</option>
+        <option value="C">Sistema C</option>
+      </select>
+    </div>
+    <div class="flex flex-col">
+      <label for="systemB" class="mb-2">Seleccionar Sistema B</label>
+      <select id="systemB" class="bg-gray-800 text-gray-100 p-2 rounded">
+        <option value="A">Sistema A</option>
+        <option value="B">Sistema B</option>
+        <option value="C">Sistema C</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="grid grid-cols-2 gap-6">
+    <div id="radarCompare" class="w-full h-96"></div>
+    <div id="barCompare" class="w-full h-96"></div>
+  </div>
+  <div class="grid grid-cols-2 gap-6">
+    <div id="populationPyramid" class="w-full h-96"></div>
+    <div id="bubbleChart" class="w-full h-96"></div>
+  </div>
+</div>
+
+<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+  <!-- Panel resumen -->
+  <div id="summaryPanel" class="bg-gray-800 p-4 rounded shadow-md">
+    <h2 class="text-lg font-bold mb-2">Resumen Comparativo</h2>
+    <ul id="summaryList" class="space-y-2"></ul>
+  </div>
+</div>
+
+
+<!-- <div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+  <div id="summaryPanel" class="bg-gray-800 p-4 rounded shadow-md">
+    <h2 class="text-lg font-bold mb-4">Resumen Comparativo</h2>
+    <div id="summaryList" class="space-y-4"></div>
+  </div>
+</div> -->
+
+ 
+<script>
+
+// Datos simulados por sistema
+const systems = {
+  A: { radar:[8,6,7,5,9], bar:[10,7,5,8], male:[-10,-15,-20,-12,-8], female:[9,14,18,11,7], bubbles:[40,60,80,50,30] },
+  B: { radar:[5,9,6,8,7], bar:[6,9,8,7], male:[-8,-12,-18,-10,-6], female:[7,11,15,9,5], bubbles:[30,50,70,40,20] },
+  C: { radar:[7,5,8,6,9], bar:[9,4,6,10], male:[-12,-18,-22,-14,-9], female:[11,16,20,13,8], bubbles:[50,40,60,70,30] }
+};
+
+const ageGroups = ['0-14','15-29','30-44','45-59','60+'];
+
+// Función para renderizar todo
+function renderAll(sysA, sysB) {
+  // Radar
+  Plotly.newPlot('radarCompare', [
+    { type:'scatterpolar', r:systems[sysA].radar, theta:['M1','M2','M3','M4','M5'], fill:'toself', name:'Sistema '+sysA },
+    { type:'scatterpolar', r:systems[sysB].radar, theta:['M1','M2','M3','M4','M5'], fill:'toself', name:'Sistema '+sysB }
+  ], { paper_bgcolor:'#111', font:{color:'#eee'}, polar:{bgcolor:'#111', radialaxis:{visible:true, range:[0,10], color:'#eee'}} });
+
+  // Barras horizontales
+  Plotly.newPlot('barCompare', [
+    { type:'bar', x:systems[sysA].bar, y:['M1','M2','M3','M4'], orientation:'h', marker:{color:'#36a2eb'}, name:'Sistema '+sysA },
+    { type:'bar', x:systems[sysB].bar, y:['M1','M2','M3','M4'], orientation:'h', marker:{color:'#ff6384'}, name:'Sistema '+sysB }
+  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, barmode:'group' });
+
+  // Pirámide de población
+  Plotly.newPlot('populationPyramid', [
+    { type:'bar', x:systems[sysA].male, y:ageGroups, orientation:'h', name:'Hombres '+sysA, marker:{color:'#36a2eb'} },
+    { type:'bar', x:systems[sysA].female, y:ageGroups, orientation:'h', name:'Mujeres '+sysA, marker:{color:'#4bc0c0'} },
+    { type:'bar', x:systems[sysB].male, y:ageGroups, orientation:'h', name:'Hombres '+sysB, marker:{color:'#ff6384'} },
+    { type:'bar', x:systems[sysB].female, y:ageGroups, orientation:'h', name:'Mujeres '+sysB, marker:{color:'#cc65fe'} }
+  ], { barmode:'relative', paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'} });
+
+  // Burbujas
+  Plotly.newPlot('bubbleChart', [
+    { x:[1,2,3,4,5], y:[10,15,13,17,9], text:ageGroups, mode:'markers', marker:{ size:systems[sysA].bubbles, color:'#36a2eb' }, name:'Sistema '+sysA },
+    { x:[1,2,3,4,5], y:[12,14,11,16,10], text:ageGroups, mode:'markers', marker:{ size:systems[sysB].bubbles, color:'#ff6384' }, name:'Sistema '+sysB }
+  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'} });
+}
+
+// Render inicial
+renderAll('A','B');
+
+// Eventos de selección
+document.getElementById('systemA').addEventListener('change',(e)=>{
+  const sysA = e.target.value;
+  const sysB = document.getElementById('systemB').value;
+  renderAll(sysA, sysB);
+});
+
+document.getElementById('systemB').addEventListener('change',(e)=>{
+  const sysB = e.target.value;
+  const sysA = document.getElementById('systemA').value;
+  renderAll(sysA, sysB);
+});
+
+
+
+// Función para generar resumen con íconos
+function generateSummary(sysA, sysB) {
+  const radarDiff = systems[sysA].radar.map((val,i)=>val - systems[sysB].radar[i]);
+  const barDiff = systems[sysA].bar.map((val,i)=>val - systems[sysB].bar[i]);
+
+  let summaryItems = "";
+
+  radarDiff.forEach((diff,i)=>{
+    if(diff > 0){
+      summaryItems += `<li class="text-green-400">✅ Sistema ${sysA} supera en Métrica ${i+1} (+${diff})</li>`;
+    } else if(diff < 0){
+      summaryItems += `<li class="text-red-400">❌ Sistema ${sysB} supera en Métrica ${i+1} (${diff})</li>`;
+    } else {
+      summaryItems += `<li class="text-yellow-400">⚖️ Ambos sistemas iguales en Métrica ${i+1}</li>`;
+    }
+  });
+
+  barDiff.forEach((diff,i)=>{
+    if(diff > 0){
+      summaryItems += `<li class="text-green-400">📊 Sistema ${sysA} tiene mayor valor en Barra ${i+1} (+${diff})</li>`;
+    } else if(diff < 0){
+      summaryItems += `<li class="text-red-400">📊 Sistema ${sysB} tiene mayor valor en Barra ${i+1} (${diff})</li>`;
+    } else {
+      summaryItems += `<li class="text-yellow-400">📊 Igualdad en Barra ${i+1}</li>`;
+    }
+  });
+
+  document.getElementById('summaryList').innerHTML = summaryItems;
+}
+
+// Render inicial
+generateSummary('A','B');
+
+// Eventos de selección
+document.getElementById('systemA').addEventListener('change',(e)=>{
+  const sysA = e.target.value;
+  const sysB = document.getElementById('systemB').value;
+  generateSummary(sysA, sysB);
+});
+
+document.getElementById('systemB').addEventListener('change',(e)=>{
+  const sysB = e.target.value;
+  const sysA = document.getElementById('systemA').value;
+  generateSummary(sysA, sysB);
+});
+
+
+/*  */
+
+// // Función para generar resumen con sparklines
+// function generateSummary(sysA, sysB) {
+//   const radarDiff = systems[sysA].radar.map((val,i)=>val - systems[sysB].radar[i]);
+//   const barDiff = systems[sysA].bar.map((val,i)=>val - systems[sysB].bar[i]);
+
+//   let summaryHTML = "";
+
+//   radarDiff.forEach((diff,i)=>{
+//     const metricId = `sparkRadar${i}`;
+//     let icon = diff>0 ? "✅" : diff<0 ? "❌" : "⚖️";
+//     let colorClass = diff>0 ? "text-green-400" : diff<0 ? "text-red-400" : "text-yellow-400";
+//     summaryHTML += `
+//       <div class="flex items-center gap-4">
+//         <span class="${colorClass}">${icon} Métrica Radar ${i+1}</span>
+//         <div id="${metricId}" class="w-32 h-16"></div>
+//       </div>`;
+//   });
+
+//   barDiff.forEach((diff,i)=>{
+//     const metricId = `sparkBar${i}`;
+//     let icon = diff>0 ? "📊✅" : diff<0 ? "📊❌" : "📊⚖️";
+//     let colorClass = diff>0 ? "text-green-400" : diff<0 ? "text-red-400" : "text-yellow-400";
+//     summaryHTML += `
+//       <div class="flex items-center gap-4">
+//         <span class="${colorClass}">${icon} Barra ${i+1}</span>
+//         <div id="${metricId}" class="w-32 h-16"></div>
+//       </div>`;
+//   });
+
+//   document.getElementById('summaryList').innerHTML = summaryHTML;
+
+//   // Render sparklines
+//   radarDiff.forEach((_,i)=>{
+//     Plotly.newPlot(`sparkRadar${i}`, [
+//       { x:[1,2], y:[systems[sysA].radar[i], systems[sysB].radar[i]], mode:'lines+markers', line:{color:'#36a2eb'}, name:'Sistema '+sysA },
+//       { x:[1,2], y:[systems[sysB].radar[i], systems[sysA].radar[i]], mode:'lines+markers', line:{color:'#ff6384'}, name:'Sistema '+sysB }
+//     ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, margin:{t:0,l:20,r:20,b:20}, showlegend:false });
+//   });
+
+//   barDiff.forEach((_,i)=>{
+//     Plotly.newPlot(`sparkBar${i}`, [
+//       { x:[1,2], y:[systems[sysA].bar[i], systems[sysB].bar[i]], mode:'lines+markers', line:{color:'#36a2eb'}, name:'Sistema '+sysA },
+//       { x:[1,2], y:[systems[sysB].bar[i], systems[sysA].bar[i]], mode:'lines+markers', line:{color:'#ff6384'}, name:'Sistema '+sysB }
+//     ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, margin:{t:0,l:20,r:20,b:20}, showlegend:false });
+//   });
+// }
+
+// // Render inicial
+// generateSummary('A','B');
+
+// // Eventos de selección
+// document.getElementById('systemA').addEventListener('change',(e)=>{
+//   const sysA = e.target.value;
+//   const sysB = document.getElementById('systemB').value;
+//   generateSummary(sysA, sysB);
+// });
+
+// document.getElementById('systemB').addEventListener('change',(e)=>{
+//   const sysB = e.target.value;
+//   const sysA = document.getElementById('systemA').value;
+//   generateSummary(sysA, sysB);
+// });
+
+
+</script>
+
+{% endblock %}

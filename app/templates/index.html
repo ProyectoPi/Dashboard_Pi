@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>StructuraAI</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles/style.css') }}">
+
+</head>
+
+<body class="bg-white overflow-x-hidden">
+
+  <!-- ===================== -->
+  <!-- NAVBAR -->
+  <!-- ===================== -->
+
+  <nav class="fixed top-0 left-0 w-full z-50 bg-slate-950/70 backdrop-blur-lg">
+
+    <div class="container mx-auto px-6">
+      <div class="flex items-center justify-between h-20">
+        <div class="flex items-center gap-3">
+          <!-- <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600"></div> -->
+          <img class="brightness-0 invert w-40" src="{{ url_for('static', filename='assets/img/logo_pi.png') }}" alt="">
+          <h1 class="text-2xl font-bold text-white">P<span class="text-cyan-400">PI</span></h1>
+        </div>
+        <ul class="hidden lg:flex gap-8 text-white">
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#allies">Aliados</a></li>
+          <li><a href="#dashboard">Plataforma</a></li>
+          <li><a href="#services">Aplicaciones</a></li>
+
+          {% if user.is_authenticated %}
+          <li><a class="text-cyan-400" href="/dashboard">Ir al Dashboard</a></li>
+          <li><a class="text-cyan-400" href="/logout">Cerrar sesión</a></li>
+          {% else %}
+          <li><a class="font-bold hover:bg-neutral-700 p-2 rounded-lg" href="/login">Iniciar sesión</a></li>
+          {% endif %}
+
+        </ul>
+        {% if not current_user.is_authenticated %}
+        <a class="bg-cyan-500 px-6 py-3 rounded-xl text-white hover:scale-105 transition" href="#contact">Solicitar Demo</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== -->
+  <!-- HERO CAROUSEL -->
+  <!-- ===================== -->
+
+  <section class="relative h-screen">
+    <div class="swiper heroSwiper h-full">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+          <div class="h-screen bg-cover bg-center" style="margin: 5rem 0; background-image: linear-gradient(to right,
+rgba(2,6,23,.95),
+rgba(2,6,23,.65),
+rgba(2,6,23,.2)),
+url('static/assets/img/bridge.png');
+">
+
+            <div class="container mx-auto px-6 my-8 h-full">
+              <div class="grid lg:grid-cols-2 h-full items-center">
+                <div data-aos="fade-right">
+                  <h1 class="text-5xl lg:text-5xl font-bold text-white leading-tight">
+                    Monitoreo Inteligente.<br>
+                    Decisiones Seguras.
+                  </h1>
+                  <h2 class="text-cyan-400 text-4xl mt-4">
+                    Estructuras que perduran.
+                  </h2>
+                  <p class="text-slate-300 mt-6 text-xl">
+                    Analizamos la salud estructural de edificios, puentes e infraestructura
+                    mediante sensores IoT, modelos predictivos e Inteligencia Artificial.
+                  </p>
+                  <div class="flex gap-4 mt-8">
+                    <a class="bg-cyan-500 px-8 py-4 rounded-xl" href="#contact">
+                      Solicitar Demo
+                    </a>
+                    <a class="border border-white px-8 py-4 rounded-xl text-white" href="{{ url_for('auth.login') }}">
+                      Conocer Plataforma
+                    </a>
+                  </div>
+                </div>
+
+                <!-- <div class="hidden lg:flex justify-center">
+                  <div class="grid gap-5">
+                    <div class="glass-card">
+                      <i class="fas fa-wifi"></i>
+                      Sensores IoT
+                    </div>
+                    <div class="glass-card">
+                      <i class="fas fa-chart-line"></i>
+                      Análisis en Tiempo Real
+                    </div>
+                    <div class="glass-card">
+                      <i class="fas fa-brain"></i>
+                      IA Predictiva
+                    </div>
+                    <div class="glass-card">
+                      <i class="fas fa-bell"></i>
+                      Alertas Inteligentes
+                    </div>
+                  </div>
+                </div> -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+  </section>
+  <!-- ===================== -->
+  <!-- CLIENTES -->
+  <!-- ===================== -->
+  <section class="bg-white py-10" id="allies">
+    <div class="container mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 flex justify-center">
+
+        <div class="logo-item"></div>
+        <div class="logo-item"><img src="{{ url_for('static', filename='assets/img/logo_eafit.png') }}" alt=""></div>
+        <div class="logo-item"><img src="{{ url_for('static', filename='assets/img/logo_usb.png') }}" alt=""></div>
+        <div class="logo-item"><img src="{{ url_for('static', filename='assets/img/logo_epm.png') }}" alt=""></div>
+        <div class="logo-item"><img src="{{ url_for('static', filename='assets/img/logo_ingenia.png') }}" alt=""></div>
+        <div class="logo-item"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- TRENDS -->
+  <!-- ===================== -->
+
+  <section class="py-10" id="dashboard">
+    <div class="container mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-14">
+        <div data-aos="fade-right">
+          <h3 class="text-cyan-400 text-4xl mt-4">
+            SOLUCIÓN INTEGRAL
+          </h3>
+          <h2 class="text-5xl font-bold">
+            Del dato a la decisión
+          </h2>
+          <p class="mt-6 text-gray-600">
+            Nuetsra plataforma digital centraliza, analiza y convierte datos estructurales en información accionable
+            para extender la vida útil de tus activos y reducir riesgos.
+          </p>
+          <ul class="space-y-4 mt-10">
+            <li>
+              <i class="fas fa-circle-check text-cyan-500 text-xl"></i>
+              Monitoreo 24/7
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500 text-xl"></i>
+              IA Predictiva
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500 text-xl"></i>
+              Alertas Inteligentes
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500 text-xl"></i>
+              Gemelos Digitales
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+          <div class="grid grid-cols-4 gap-4 mb-8">
+            <div class="card-stat">
+              <h3>128</h3>
+              <p>Activos</p>
+            </div>
+            <div class="card-stat">
+              <h3>1248</h3>
+              <p>Sensores</p>
+            </div>
+            <div class="card-stat">
+              <h3>7</h3>
+              <p>Alertas</p>
+            </div>
+            <div class="card-stat">
+              <h3>82%</h3>
+              <p>Salud</p>
+            </div>
+          </div>
+          <canvas id="healthChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== -->
+  <!-- DASHBOARD -->
+  <!-- ===================== -->
+
+  <!-- <section class="py-24">
+    <div class="container mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-14">
+
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+          <div class="grid grid-cols-4 gap-4 mb-8">
+            <div class="card-stat">
+              <h3>128</h3>
+              <p>Activos</p>
+            </div>
+            <div class="card-stat">
+              <h3>1248</h3>
+              <p>Sensores</p>
+            </div>
+            <div class="card-stat">
+              <h3>7</h3>
+              <p>Alertas</p>
+            </div>
+            <div class="card-stat">
+              <h3>82%</h3>
+              <p>Salud</p>
+            </div>
+            <img src="" alt="">
+          </div>
+          <canvas id="healthChart"></canvas>
+        </div>
+
+        <div data-aos="fade-right">
+          <h2 class="text-5xl font-bold">
+            Del dato a la decisión
+          </h2>
+          <p class="mt-6 text-gray-600">
+            La plataforma centraliza toda la información
+            estructural.
+          </p>
+          <ul class="space-y-4 mt-10">
+            <li>
+              <i class="fas fa-circle-check text-cyan-500"></i>
+              Monitoreo 24/7
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500"></i>
+              IA Predictiva
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500"></i>
+              Alertas Inteligentes
+            </li>
+            <li>
+              <i class="fas fa-circle-check text-cyan-500"></i>
+              Gemelos Digitales
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+  </section> -->
+
+  <!-- ===================== -->
+  <!-- APLICACIONES -->
+  <!-- ===================== -->
+
+  <section class="py-10 bg-slate-50" id="services">
+    <div class="container mx-auto px-6">
+      <h3 class="text-cyan-400 text-4xl mt-4 text-center">
+        APLICACIONES
+      </h3>
+      <h2 class="text-center text-5xl font-bold mb-10">
+        Para todo tipo de estructuras
+      </h2>
+      <p class="text-center mt-2 text-gray-600">
+        Una solución versátil para los desafios estructurales del mundo real
+      </p>
+      <div class="swiper structuresSwiper p-6">
+        <div class="swiper-wrapper grid grid-cols-1 md:grid-cols-4 gap-4 items-stretch">
+          <!-- Card -->
+          <div class="swiper-slide hover-application p-4 h-full">
+            <div class="app-card flex flex-col h-full min-h-[400px] bg-white rounded-lg shadow">
+              <img src="{{ url_for('static', filename='assets/img/buildings.jpg') }}"
+                class="w-full h-48 object-cover rounded-t-lg">
+              <h3 class="text-xl font-semibold mt-4 px-3">Edificios</h3>
+              <p class="m-3 text-gray-600 text-justify flex-grow">
+                Monitorea el comportamiento estructural de edificaciones comerciales, residenciales e industriales.
+              </p>
+            </div>
+          </div>
+          <div class="swiper-slide hover-application p-4 h-full">
+            <div class="app-card flex flex-col h-full min-h-[400px] bg-white rounded-lg shadow">
+              <img src="{{ url_for('static', filename='assets/img/bridge.jpg') }}">
+              <h3 class="text-xl font-semibold mt-4 px-3">Puentes</h3>
+              <p class="m-3 text-gray-600 text-justify flex-grow">
+                Detecta anomalías, vibraciones y deformaciones para garantizar la seguridad y continuidad operativa.
+              </p>
+            </div>
+          </div>
+          <div class="swiper-slide hover-application p-4 h-full">
+            <div class="w-2xs app-card flex flex-col h-full min-h-[400px] bg-white rounded-lg shadow">
+              <img src="{{ url_for('static', filename='assets/img/house.jpg') }}">
+              <h3 class="text-xl font-semibold mt-4 px-3">Viviendas</h3>
+              <p class="m-3 text-gray-600 text-justify flex-grow">
+                Protege tu hogar con monitoreo continuo y alertas ante cualquier riesgo estructural.
+              </p>
+            </div>
+          </div>
+          <div class="swiper-slide hover-application p-4 h-full">
+            <div class="w-2xs app-card flex flex-col h-full min-h-[400px] bg-white rounded-lg shadow">
+              <img src="{{ url_for('static', filename='assets/img/stadium.jpg') }}">
+              <h3 class="text-xl font-semibold mt-4 px-3">Infraestructura</h3>
+              <p class="m-3 text-gray-600 text-justify flex-grow">
+                Soluciones escalables para presas, tuneles, torres, estadios y más, sobre infraestructura de ciudad.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== -->
+  <!-- IA -->
+  <!-- ===================== -->
+
+  <section class="relative py-10 bg-slate-950 text-white" style="    background-image: url(static/assets/img/brain.png);
+    background-size: cover;
+    background-repeat: no-repeat;">
+    <div class="container mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <h4 class="text-cyan-400 text-2xl mt-4">
+            INTELIGENCIA ARTIFICIAL
+          </h4>
+          <h2 class="text-5xl font-bold">
+            IA que entiende tus estructuras
+          </h2>
+          <p class="mt-6 text-slate-300">
+            Nuestros modelos de machine Learnning se entrenan con datos reales para detectar patrones, anticipar fallas
+            y ayudarte a tomar decisiones basadas en evidencia.
+          </p>
+        </div>
+        <!-- <div>
+          <img src=" " class="rounded-3xl">
+        </div> -->
+      </div>
+    </div>
+    <div class="container mx-auto my-10">
+      <div class="px-4 my-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10 flex justify-center">
+
+        <div class="logo-item text-white"><i class="fa-solid fa-building-circle-exclamation mx-2 text-2xl"></i>
+          Detección de anomalías</div>
+        <div class="logo-item text-white"><i class="fa-solid fa-heart-pulse mx-2 text-2xl"></i> Predicción vida útil
+          restante</div>
+        <div class="logo-item text-white"><i class="fa-solid fa-arrows-spin mx-2 text-2xl"></i> Aprendizaje continuo
+        </div>
+        <div class="logo-item"></div>
+        <div class="logo-item"></div>
+        <div class="logo-item"></div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== -->
+  <!-- CTA -->
+  <!-- ===================== -->
+
+  <section class="py-10 bg-gradient-to-r from-cyan-500 to-blue-600">
+   
+  <div class="container mx-auto px-6 align-middle">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mx-10">
+      
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-globe text-6xl text-white flex-shrink-0"></i>
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-bold text-white text-justify m-0">
+            Cobertura global. Impacto local.
+          </h2>
+          <p class="text-slate-300 text-xl text-justify">
+            Ayúdanos a construir un futuro más seguro y sostenible, con nuestra plataforma PI.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center md:text-right">
+        <a class="bg-transparent border border-white text-white font-semibold px-8 py-4 rounded-xl shadow transition duration-300 hover:bg-white hover:text-black" href="#contact">
+          Solicitar Demo ➔
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  </section>
+
+  <!-- ===================== -->
+  <!-- CONTACT -->
+  <!-- ===================== -->
+  <section class="py-20 bg-slate-50" id="contact">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="bg-white rounded-3xl shadow-xl overflow-hidden grid lg:grid-cols-2">
+        <!-- Formulario -->
+        <div class="p-10">
+          <h2 class="text-4xl font-bold text-slate-900">
+            Contáctanos
+          </h2>
+          <p class="mt-3 text-slate-600">
+            Solicita una demostración de ProyectoPI.
+          </p>
+          <form class="mt-8 space-y-5" action="/submit" method="POST">
+            <input type="text" placeholder="Nombre completo" class="w-full rounded-2xl border border-slate-200 p-4" name="name" />
+            <input type="email" placeholder="Correo electrónico"
+              class="w-full rounded-2xl border border-slate-200 p-4" name="email"/>
+            <textarea rows="5" placeholder="Mensaje" class="w-full rounded-2xl border border-slate-200 p-4" name="message"></textarea>
+            <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-2xl font-semibold">
+              Enviar consulta
+            </button>
+          </form>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="mt-4">
+              {% for category, message in messages %}
+                <div class="p-4 rounded-lg 
+                            {% if category == 'success' %} bg-green-100 text-green-800 {% endif %}
+                            {% if category == 'error' %} bg-red-100 text-red-800 {% endif %}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+      {% endwith %}
+
+
+        <!-- Panel visual -->
+        <div class="bg-[url('{{ url_for('static', filename='assets/img/dashboard.png') }}')] bg-contain">
+        <!-- Imagen o render tecnológico -->
+        <div>
+          <img src="" class=" rounded-3xl">
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- FOOTER -->
+  <!-- ===================== -->
+  <footer class="bg-[url('{{ url_for('static', filename='assets/img/footer.png') }}')] bg-contain">
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950 to-blue-950/30"></div>
+    <div class="relative max-w-7xl mx-auto px-6 py-20">
+
+      <div class="grid lg:grid-cols-4 gap-12">
+
+        <!-- Logo -->
+        <div>
+          <img src="{{ url_for('static', filename='assets/img/logo_pi.png') }}" alt="ProyectoPI"
+            class="h-20 mb-6 brightness-0 invert" />
+
+          <p class="text-slate-400 leading-relaxed">
+            Inteligencia Artificial aplicada al monitoreo,
+            diagnóstico y análisis predictivo de salud
+            estructural.
+          </p>
+        </div>
+
+        <!-- Soluciones -->
+        <div>
+          <h4 class="mb-5 font-bold text-cyan-400">
+            Soluciones
+          </h4>
+
+          <ul class="space-y-3 text-slate-400">
+            <li><i class="fa-solid fa-wifi text-cyan-400 text-xl"></i> Monitoreo IoT</li>
+            <li><i class="fa-solid fa-brain text-cyan-400 text-xl"></i> IA Predictiva</li>
+            <li><i class="fa-brands fa-codepen text-cyan-400 text-xl"></i> Gemelo Digital</li>
+            <li><i class="fa-solid fa-building text-cyan-400 text-xl"></i> Salud Estructural</li>
+          </ul>
+        </div>
+
+        <!-- Plataforma -->
+        <div>
+          <h4 class="mb-5 font-bold text-cyan-400">
+            Plataforma
+          </h4>
+
+          <ul class="space-y-3 text-slate-400">
+            <li><i class="fa-solid fa-desktop text-cyan-400 text-xl"></i> Dashboard</li>
+            <li><i class="fa-solid fa-chart-simple text-cyan-400 text-xl"></i> Analítica</li>
+            <li><i class="fa-solid fa-file-lines text-cyan-400 text-xl"></i> Reportes</li>
+            <li><i class="fa-solid fa-puzzle-piece text-cyan-400 text-xl"></i> API</li>
+          </ul>
+        </div>
+
+        <!-- Contacto -->
+        <div>
+          <h4 class="mb-5 font-bold text-cyan-400">
+            Contacto
+          </h4>
+
+          <ul class="space-y-3 text-slate-400">
+            <li><i class="fa-solid fa-envelope text-cyan-400 text-xl"></i> contacto@proyectopi.com</li>
+            <li><i class="fa-solid fa-phone text-cyan-400 text-xl"></i> +57 XXX XXX XXXX</li>
+            <li><i class="fa-solid fa-location-dot text-cyan-400 text-xl"></i> Medellín, Colombia</li>
+            <li><i class="fa-solid fa-clock text-cyan-400 text-xl"></i> Lun-Vie 8:00am-5:00pm</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="border-t border-slate-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-slate-500 text-sm text-lg">
+          © 2026 ProyectoPI. Todos los derechos reservados.
+        </p>
+        <div class="flex gap-4 mt-4 md:mt-0">
+          <!-- iconos redes -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+
+</body>
+
+<script>
+
+  AOS.init({
+    duration: 1200,
+    once: true
+  });
+
+  new Swiper(".heroSwiper", {
+
+    loop: true,
+    autoplay: {
+      delay: 5000
+    },
+
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true
+    }
+  });
+
+  new Swiper(".structuresSwiper", {
+    slidesPerView: 1,
+    spaceBetween: 30,
+    loop: true,
+
+    autoplay: {
+      delay: 3500
+    },
+
+    breakpoints: {
+      768: {
+        slidesPerView: 2
+      },
+
+      1024: {
+        slidesPerView: 4
+      }
+    }
+
+  });
+
+
+  const ctx =
+    document.getElementById("healthChart");
+  new Chart(ctx, {
+
+    type: "line",
+
+    data: {
+      labels: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun'
+      ],
+
+      datasets: [{
+        label: 'Salud Estructural',
+        data: [70, 74, 79, 76, 82, 87],
+        borderColor: '#06b6d4',
+        borderWidth: 3,
+        fill: true
+
+      }]
+    },
+
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+
+</script>
+
+</html>

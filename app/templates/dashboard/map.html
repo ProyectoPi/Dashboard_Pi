@@ -1,0 +1,27 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Mapas{% endblock %}
+{% block content %}
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
+  
+  <!-- Columna izquierda: Mapa 3D -->
+  <div class="bg-gray-800 shadow rounded p-6 flex items-center justify-center">
+    <!-- <h2 class="text-lg font-semibold mb-4">Mapa 3D</h2> -->
+    <div id="map" class="w-full h-full"></div>
+  </div>
+
+ <!-- Columna derecha: Indicadores dinámicos -->
+  <div class="bg-gray-800 shadow rounded p-6 flex flex-col">
+    <h2 class="text-lg font-semibold mb-4">Indicadores del Mapa</h2>
+    <div class="flex space-x-4 mb-4">
+      <button class="bg-blue-600 px-3 py-2 rounded" onclick="updateIndicador('ventas')">Ventas</button>
+      <button class="bg-green-600 px-3 py-2 rounded" onclick="updateIndicador('tickets')">Tickets</button>
+      <button class="bg-red-600 px-3 py-2 rounded" onclick="updateIndicador('alertas')">Alertas</button>
+    </div>
+    <div id="graficoIndicador" class="flex-1 min-h-[400px]"></div>
+  </div>
+
+</div>
+
+{% endblock %}

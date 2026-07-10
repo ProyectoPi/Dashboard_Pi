@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProyectoPI | Login</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, .35);
+        }
+
+        .input {
+            width: 100%;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: white;
+            border-radius: 14px;
+            padding: 15px 18px;
+            transition: .35s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, .2);
+        }
+
+        .bg-tech {
+            background-image:
+                linear-gradient(rgba(2, 6, 23, .82), rgba(2, 6, 23, .82)),
+                url("assets/img/footer-bg.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .btn {
+            transition: .35s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .fade {
+            animation: fade .8s;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+</head>
+
+<body class="bg-slate-950">
+    <div class="min-h-screen grid lg:grid-cols-2">
+        <!-- ================================= -->
+        <!-- PANEL IZQUIERDO -->
+        <!-- ================================= -->
+        <div class="hidden lg:flex relative bg-tech">
+            <div class="absolute inset-0 bg-gradient-to-br
+        from-cyan-500/10
+        to-blue-900/40">
+            </div>
+            <div class="relative z-10
+        flex flex-col
+        justify-center
+        px-20
+        text-white">
+                <img src="{{ url_for('static', filename='assets/img/logo_pi.png') }}"
+                    class="w-40 mb-8 brightness-0 invert">
+                <h1 class="text-6xl font-bold leading-tight">
+                    Bienvenido a
+                    <span class="text-cyan-400">
+                        ProyectoPI
+                    </span>
+                </h1>
+
+                <p class="mt-8 text-xl text-slate-300 leading-9">
+                    Plataforma inteligente para el monitoreo,
+                    diagnóstico y análisis predictivo
+                    de la salud estructural de edificios,
+                    puentes e infraestructura crítica.
+                </p>
+
+                <div class="grid grid-cols-2 gap-5 mt-16">
+                    <div class="glass p-6 rounded-2xl">
+                        <i class="fa-solid fa-brain text-3xl text-cyan-400"></i>
+                        <h3 class="mt-4 font-semibold">
+                            Inteligencia Artificial
+                        </h3>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <i class="fa-solid fa-chart-line text-3xl text-cyan-400"></i>
+                        <h3 class="mt-4 font-semibold">
+                            Dashboard Analítico
+                        </h3>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <i class="fa-solid fa-tower-observation text-3xl text-cyan-400"></i>
+                        <h3 class="mt-4 font-semibold">
+                            Monitoreo IoT
+                        </h3>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <i class="fa-solid fa-shield-halved text-3xl text-cyan-400"></i>
+                        <h3 class="mt-4 font-semibold">
+                            Predicción de Riesgos
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================= -->
+        <!-- LOGIN -->
+        <!-- ================================= -->
+
+        <div class="flex items-center
+    justify-center
+    bg-gradient-to-br
+    from-slate-950
+    via-slate-900
+    to-blue-950
+    p-8">
+
+            <div class="glass
+        rounded-3xl
+        w-full
+        max-w-md
+        p-10
+        fade">
+
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='assets/img/logo_pi.png') }}"
+                        class="w-40 mx-auto brightness-0 invert">
+                    <h2 class="text-4xl
+                font-bold
+                text-white
+                mt-5">
+                        Iniciar Sesión
+                    </h2>
+                    <p class="text-slate-400
+                mt-3">
+                        Accede a tu plataforma de monitoreo.
+                    </p>
+                </div>
+
+                <form class="mt-10
+            space-y-6" method="post">
+                    <!-- Usuario -->
+                    <div>
+                        <label class="text-slate-300 text-sm">
+                            Usuario
+                        </label>
+
+                        <div class="relative mt-2">
+                            <i class="fa-solid fa-user
+                        absolute
+                        left-5
+                        top-1/2
+                        -translate-y-1/2
+                        text-slate-500">
+                            </i>
+                            <input class="input pl-14" placeholder="Ingrese su usuario" name="username">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="text-slate-300 text-sm">
+                            Contraseña
+                        </label>
+                        <div class="relative mt-2">
+                            <i class="fa-solid fa-lock
+                        absolute
+                        left-5
+                        top-1/2
+                        -translate-y-1/2
+                        text-slate-500">
+                            </i>
+                            <input id="password" type="password" class="input pl-14 pr-14" placeholder="********"
+                                name="password">
+                            <button type="submit" id="toggle" class="absolute
+                        right-5
+                        top-1/2
+                        -translate-y-1/2
+                        text-slate-400">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Opciones -->
+                    <div class="flex
+                justify-between
+                text-sm">
+                        <label class="flex items-center gap-2
+                    text-slate-400">
+                            <input type="checkbox">
+                            Recordarme
+                        </label>
+                        <a href="#" class="text-cyan-400">
+                            ¿Olvidó su contraseña?
+                        </a>
+                    </div>
+                    <!-- Botón -->
+                    <button class="btn
+                w-full
+                bg-gradient-to-r
+                from-cyan-500
+                to-blue-600
+                py-4
+                rounded-xl
+                text-white
+                font-semibold">
+                        Ingresar
+                    </button>
+                </form>
+                <div class="mt-10
+            text-center">
+                    <p class="text-slate-400">
+                        ¿No tienes una cuenta?
+                    </p>
+                    <button id="showRegister" class="mt-3
+                text-cyan-400
+                font-semibold">
+                        Crear cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const password = document.getElementById("password");
+        const toggle = document.getElementById("toggle");
+
+        toggle.onclick = () => {
+            if (password.type === "password") {
+                password.type = "text";
+                toggle.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+
+            }
+            else {
+                password.type = "password";
+                toggle.innerHTML = '<i class="fa-solid fa-eye"></i>';
+            }
+        }
+    </script>
+</body>
+
+</html>
