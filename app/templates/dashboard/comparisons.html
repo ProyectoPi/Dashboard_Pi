@@ -3,12 +3,12 @@
 {% block title %}Comparaciones{% endblock %}
 {% block content %}
 
-<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+<div class="flex flex-col gap-6 bg-black text-gray-100 p-6">
   <!-- Selectores -->
   <div class="grid grid-cols-2 gap-6">
     <div class="flex flex-col">
       <label for="systemA" class="mb-2">Seleccionar Sistema A</label>
-      <select id="systemA" class="bg-gray-800 text-gray-100 p-2 rounded">
+      <select id="systemA" class="bg-black border border-orange-400 text-gray-100 p-2 rounded">
         <option value="A">Sistema A</option>
         <option value="B">Sistema B</option>
         <option value="C">Sistema C</option>
@@ -16,7 +16,7 @@
     </div>
     <div class="flex flex-col">
       <label for="systemB" class="mb-2">Seleccionar Sistema B</label>
-      <select id="systemB" class="bg-gray-800 text-gray-100 p-2 rounded">
+      <select id="systemB" class="bg-black border border-orange-400 text-gray-100 p-2 rounded">
         <option value="A">Sistema A</option>
         <option value="B">Sistema B</option>
         <option value="C">Sistema C</option>
@@ -26,25 +26,25 @@
 
   <!-- Gráficos -->
   <div class="grid grid-cols-2 gap-6">
-    <div id="radarCompare" class="w-full h-96"></div>
-    <div id="barCompare" class="w-full h-96"></div>
+    <div id="radarCompare" class="w-full h-96 border border-orange-400"></div>
+    <div id="barCompare" class="w-full h-96 border border-orange-400"></div>
   </div>
   <div class="grid grid-cols-2 gap-6">
-    <div id="populationPyramid" class="w-full h-96"></div>
-    <div id="bubbleChart" class="w-full h-96"></div>
+    <div id="populationPyramid" class="w-full h-96 border border-orange-400"></div>
+    <div id="bubbleChart" class="w-full h-96 border border-orange-400"></div>
   </div>
 </div>
 
-<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+<div class="flex flex-col gap-6 bg-black text-gray-100 p-6">
   <!-- Panel resumen -->
-  <div id="summaryPanel" class="bg-gray-800 p-4 rounded shadow-md">
+  <div id="summaryPanel" class="bg-black border border-orange-400 p-4 rounded shadow-md">
     <h2 class="text-lg font-bold mb-2">Resumen Comparativo</h2>
     <ul id="summaryList" class="space-y-2"></ul>
   </div>
 </div>
 
 
-<!-- <div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+<!-- <div class="flex flex-col gap-6 bg-black border border-orange-400 text-gray-100 p-6">
   <div id="summaryPanel" class="bg-gray-800 p-4 rounded shadow-md">
     <h2 class="text-lg font-bold mb-4">Resumen Comparativo</h2>
     <div id="summaryList" class="space-y-4"></div>
@@ -69,13 +69,13 @@ function renderAll(sysA, sysB) {
   Plotly.newPlot('radarCompare', [
     { type:'scatterpolar', r:systems[sysA].radar, theta:['M1','M2','M3','M4','M5'], fill:'toself', name:'Sistema '+sysA },
     { type:'scatterpolar', r:systems[sysB].radar, theta:['M1','M2','M3','M4','M5'], fill:'toself', name:'Sistema '+sysB }
-  ], { paper_bgcolor:'#111', font:{color:'#eee'}, polar:{bgcolor:'#111', radialaxis:{visible:true, range:[0,10], color:'#eee'}} });
+  ], { paper_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, polar:{bgcolor:'rgba(0,0,0,0)', radialaxis:{visible:true, range:[0,10], color:'#eee'}} });
 
   // Barras horizontales
   Plotly.newPlot('barCompare', [
     { type:'bar', x:systems[sysA].bar, y:['M1','M2','M3','M4'], orientation:'h', marker:{color:'#36a2eb'}, name:'Sistema '+sysA },
     { type:'bar', x:systems[sysB].bar, y:['M1','M2','M3','M4'], orientation:'h', marker:{color:'#ff6384'}, name:'Sistema '+sysB }
-  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, barmode:'group' });
+  ], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, barmode:'group' });
 
   // Pirámide de población
   Plotly.newPlot('populationPyramid', [
@@ -83,13 +83,13 @@ function renderAll(sysA, sysB) {
     { type:'bar', x:systems[sysA].female, y:ageGroups, orientation:'h', name:'Mujeres '+sysA, marker:{color:'#4bc0c0'} },
     { type:'bar', x:systems[sysB].male, y:ageGroups, orientation:'h', name:'Hombres '+sysB, marker:{color:'#ff6384'} },
     { type:'bar', x:systems[sysB].female, y:ageGroups, orientation:'h', name:'Mujeres '+sysB, marker:{color:'#cc65fe'} }
-  ], { barmode:'relative', paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'} });
+  ], { barmode:'relative', paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'} });
 
   // Burbujas
   Plotly.newPlot('bubbleChart', [
     { x:[1,2,3,4,5], y:[10,15,13,17,9], text:ageGroups, mode:'markers', marker:{ size:systems[sysA].bubbles, color:'#36a2eb' }, name:'Sistema '+sysA },
     { x:[1,2,3,4,5], y:[12,14,11,16,10], text:ageGroups, mode:'markers', marker:{ size:systems[sysB].bubbles, color:'#ff6384' }, name:'Sistema '+sysB }
-  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'} });
+  ], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'} });
 }
 
 // Render inicial

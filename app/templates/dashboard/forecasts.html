@@ -9,14 +9,14 @@
 <!-- JS de Plotly -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<div class="flex flex-col gap-6 bg-gray-900 text-gray-100 p-6">
+<div class="flex flex-col gap-6 bg-black text-gray-100 p-6">
 
   <!-- Primera fila -->
   <div class="grid grid-cols-2 gap-6">
     <!-- Selector de sensor -->
     <div class="flex flex-col">
       <label for="sensorSelect" class="mb-2">Seleccionar Sensor</label>
-      <select id="sensorSelect" class="bg-gray-800 text-gray-100 p-2 rounded">
+      <select id="sensorSelect" class="bg-black border border-orange-400 text-gray-100 p-2 rounded">
         <option value="S1">Sensor 1</option>
         <option value="S2">Sensor 2</option>
         <option value="S3">Sensor 3</option>
@@ -26,7 +26,7 @@
     <!-- Calendario popup -->
     <div class="flex flex-col">
       <label class="mb-2">Seleccionar Periodo</label>
-      <input type="text" id="calendarInput" class="bg-gray-800 text-gray-100 p-2 rounded" placeholder="Haz click para elegir rango">
+      <input type="text" id="calendarInput" class="bg-black border border-orange-400 text-gray-100 p-2 rounded" placeholder="Haz click para elegir rango">
     </div>
   </div>
 
@@ -40,10 +40,10 @@
 
   <!-- Segunda fila -->
   <div class="grid grid-cols-2 gap-6">
-    <div id="lineForecast" class="w-full h-80"></div>
-    <div id="scatterNebula" class="w-full h-80"></div>
-    <div id="correlationChart" class="w-full h-80"></div>
-    <div id="confusionMatrix" class="w-full h-80"></div>
+    <div id="lineForecast" class="w-full h-80 border border-orange-400"></div>
+    <div id="scatterNebula" class="w-full h-80 border border-orange-400"></div>
+    <div id="correlationChart" class="w-full h-80 border border-orange-400"></div>
+    <div id="confusionMatrix" class="w-full h-80 border border-orange-400"></div>
   </div>
 </div>
 
@@ -93,7 +93,7 @@ function renderForecast(sensorKey, rango=null){
   Plotly.newPlot('lineForecast', [
     { x:fechas, y:real, mode:'lines+markers', name:'Real', line:{color:'#36a2eb'} },
     { x:fechas, y:pred, mode:'lines+markers', name:'Predicho', line:{color:'#ff6384'} }
-  ], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Forecast '+sensorKey, font:{color:'#eee'}} });
+  ], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, title:{text:'Forecast '+sensorKey, font:{color:'#eee'}} });
 
   // Gráfico de dispersión (filtrado por rango simulando que scatterX son fechas)
   let scatterX = s.scatterX;
@@ -105,7 +105,7 @@ function renderForecast(sensorKey, rango=null){
   Plotly.newPlot('scatterNebula', [{
     x:scatterX, y:scatterY, mode:'markers',
     marker:{ size:scatterX.map(v=>v*5), color:'#4bc0c0', opacity:0.6 }
-  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Dispersión '+sensorKey, font:{color:'#eee'}} });
+  }], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, title:{text:'Dispersión '+sensorKey, font:{color:'#eee'}} });
 
   // Gráfico de correlación (filtrado por rango simulando)
   let corrX = s.corrX;
@@ -116,13 +116,13 @@ function renderForecast(sensorKey, rango=null){
   }
   Plotly.newPlot('correlationChart', [{
     x:corrX, y:corrY, mode:'markers', marker:{color:'#cc65fe'}
-  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Correlación '+sensorKey, font:{color:'#eee'}} });
+  }], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, title:{text:'Correlación '+sensorKey, font:{color:'#eee'}} });
 
   // Matriz de confusión (puede recalcularse según rango, aquí se muestra completa)
   Plotly.newPlot('confusionMatrix', [{
     z:s.confusion, type:'heatmap', colorscale:'Viridis',
     text:[['TP','FN'],['FP','TN']], hoverinfo:'text+z'
-  }], { paper_bgcolor:'#111', plot_bgcolor:'#111', font:{color:'#eee'}, title:{text:'Matriz '+sensorKey, font:{color:'#eee'}} });
+  }], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#eee'}, title:{text:'Matriz '+sensorKey, font:{color:'#eee'}} });
 }
 
 // Render inicial

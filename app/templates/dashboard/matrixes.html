@@ -8,7 +8,7 @@
 
       <!-- Selector -->
   <div class="flex justify-center">
-    <select id="matrixSelector" class="bg-gray-800 text-gray-100 p-2 rounded w-6xl">
+    <select id="matrixSelector" class="bg-black border border-orange-400 text-gray-100 p-2 rounded w-6xl">
       <option value="A">Matriz A</option>
       <option value="B">Matriz B</option>
       <option value="C">Matriz C</option>
@@ -16,14 +16,14 @@
   </div>
 
     
-    <div id="heatmap" class="w-full h-96 bg-gray-800 shadow rounded"></div>
+    <div id="heatmap" class="w-full h-96 bg-black border border-orange-400 shadow rounded"></div>
 
     
     <div class="grid grid-cols-2 gap-4">
-        <div id="gauge1" class="w-full h-100 bg-gray-800 shadow rounded"></div>
-        <div id="gauge2" class="w-full h-100 bg-gray-800 shadow rounded"></div>
-        <div id="gauge3" class="w-full h-100 bg-gray-800 shadow rounded"></div>
-        <div id="gauge4" class="w-full h-100 bg-gray-800 shadow rounded"></div>
+        <div id="gauge1" class="w-full h-100 bg-black border border-orange-400 shadow rounded"></div>
+        <div id="gauge2" class="w-full h-100 bg-black border border-orange-400 shadow rounded"></div>
+        <div id="gauge3" class="w-full h-100 bg-black border border-orange-400 shadow rounded"></div>
+        <div id="gauge4" class="w-full h-100 bg-black border border-orange-400 shadow rounded"></div>
     </div>
 </div>
 
@@ -85,7 +85,7 @@ Plotly.newPlot('heatmap', [{
   type: 'heatmap',
   colorscale: 'Viridis'
 }], {
-  paper_bgcolor: '#111',
+  paper_bgcolor: 'rgba(0,0,0,0)', // #111
   plot_bgcolor: '#111',
   font: { color: '#eee' }
 });
@@ -100,7 +100,7 @@ function createGauge(id, value, title) {
     gauge: {
       axis: { range: [0, 100], tickcolor: '#eee' },
       bar: { color: "#36a2eb" },
-      bgcolor: "#111",
+      bgcolor: "rgba(0,0,0,0)", // #111
       bordercolor: "#444",
       steps: [
         { range: [0, 50], color: "#333" },
@@ -108,7 +108,7 @@ function createGauge(id, value, title) {
       ]
     }
   }], {
-    paper_bgcolor: '#111',
+    paper_bgcolor: 'rgba(0,0,0,0)', //#111
     font: { color: '#eee' }
   });
 }

@@ -24,31 +24,31 @@
 <body class="bg-gray-900 text-gray-100 flex h-screen">
 
   <!-- Menú lateral -->
-  <aside id="sidebar" class="w-64 bg-gray-800 text-gray-200 flex flex-col transition-all duration-300">
-    <div class="p-6 text-2xl font-bold border-b border-gray-700 flex justify-between items-center">
+  <aside id="sidebar" class="w-64 bg-black text-gray-200 flex flex-col transition-all duration-300" style="box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.5), inset -5px -5px 10px rgba(255, 255, 255, 0.1);">
+    <div class="p-6 ml-3 text-2xl font-bold border-b-2 border-orange-400 flex justify-between items-center">
       <span><img class="brightness-0 invert" src="{{ url_for('static', filename='assets/img/logo_pi.png') }}"
           alt=""></span>
       <!-- <button id="toggleSidebar" class="text-sm bg-gray-700 px-2 py-1 rounded">⇔</button> -->
     </div>
     <nav class="flex-1 p-4 space-y-2">
-      <a href="{{ url_for('admin.dashboard') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Inicio</a>
-      <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Usuarios</a>
-      <a href="{{ url_for('admin.projects') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Proyectos</a>
+      <a href="{{ url_for('admin.dashboard') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Inicio</a>
+      <a href="#" class="block py-2 px-3 rounded hover:bg-orange-400">Usuarios</a>
+      <a href="{{ url_for('admin.projects') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Proyectos</a>
       <!--  -->
-      <a href="{{ url_for('admin.structure') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Estructuras</a>
-      <a href="{{ url_for('admin.map') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Localización</a>
-      <a href="{{ url_for('admin.charts') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Gráficos</a>
-      <a href="{{ url_for('admin.matrixes') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Matrices</a>
-      <a href="{{ url_for('admin.comparisons') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Comparaciones</a>
-      <a href="{{ url_for('admin.forecasts') }}" class="block py-2 px-3 rounded hover:bg-gray-700">Predicciones</a>
+      <a href="{{ url_for('admin.structure') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Estructuras</a>
+      <a href="{{ url_for('admin.map') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Localización</a>
+      <a href="{{ url_for('admin.charts') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Gráficos</a>
+      <a href="{{ url_for('admin.matrixes') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Matrices</a>
+      <a href="{{ url_for('admin.comparisons') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Comparaciones</a>
+      <a href="{{ url_for('admin.forecasts') }}" class="block py-2 px-3 rounded hover:bg-orange-400">Predicciones</a>
     </nav>
   </aside>
 
   <!-- Contenedor principal -->
   <div class="flex-1 flex flex-col">
     <!-- Menú superior -->
-    <header class="bg-gray-800 shadow p-5 flex justify-between items-center">
-      <h1 class="text-xl font-semibold">Panel de Control</h1>
+    <header class="bg-black shadow p-5 flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Panel de Control: <span class="text-orange-400">Plataforma PI</span></h1>
       <!-- Dropdown perfil -->
       <div class="relative">
         <button id="profileBtn" class="bg-black-600 text-white px-4 py-2 rounded">
@@ -63,7 +63,7 @@
     </header>
 
     <!-- Contenido -->
-    <main class="flex-1 p-6 overflow-y-auto">
+    <main class="flex-1 p-6 overflow-y-auto bg-black">
       {% block content %}{% endblock %}
     </main>
   </div>
@@ -157,42 +157,42 @@
         new maplibregl.GlobeControl()
       );
 
-      map.on('load', () => {
-        map.addSource('contours', {
-          type: 'vector',
-          url:
-            'https://api.maptiler.com/tiles/contours/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
-        });
-        map.addLayer({
-          'id': 'contour-lines',
-          'type': 'line',
-          'source': 'contours',
-          'source-layer': 'contour',
-          'layout': {
-            'line-join': 'round',
-            'line-cap': 'round'
-          },
-          'paint': {
-            'line-color': '#ff69b4',
-            'line-width': 1
-          }
-        });
-
-        map.addLayer({
-          'id': 'contour-labels',
-          'type': 'symbol',
-          'source': 'contours',
-          'source-layer': 'contour',
-          "layout": {
-            "text-field": "{height}",
-            "symbol-placement": "line",
-            "text-font": ["Noto Sans Regular"],
-          },
-          'paint': {
-            'text-color': '#ff69b4',
-          }
-        });
-      });
+      // map.on('load', () => {
+      //   map.addSource('contours', {
+      //     type: 'vector',
+      //     url:
+      //       'https://api.maptiler.com/tiles/contours/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
+      //   });
+      //   map.addLayer({
+      //     'id': 'contour-lines',
+      //     'type': 'line',
+      //     'source': 'contours',
+      //     'source-layer': 'contour',
+      //     'layout': {
+      //       'line-join': 'round',
+      //       'line-cap': 'round'
+      //     },
+      //     'paint': {
+      //       'line-color': '#ff69b4',
+      //       'line-width': 1
+      //     }
+      //   });
+      // 
+      //   map.addLayer({
+      //     'id': 'contour-labels',
+      //     'type': 'symbol',
+      //     'source': 'contours',
+      //     'source-layer': 'contour',
+      //     "layout": {
+      //       "text-field": "{height}",
+      //       "symbol-placement": "line",
+      //       "text-font": ["Noto Sans Regular"],
+      //     },
+      //     'paint': {
+      //       'text-color': '#ff69b4',
+      //     }
+      //   });
+      // });
 
       // The 'building' layer in the streets vector source contains building-height
       // data from OpenStreetMap.
@@ -327,7 +327,7 @@
         values: [30, 50, 20],
         marker: { colors: ["#3b82f6", "#10b981", "#ef4444"] }
       }], {
-        paper_bgcolor: "rgba(31, 41, 55, 1)",
+        paper_bgcolor: "rgba(0,0,0,0)", // rgba(31, 41, 55, 1)
         font: { color: "white" }
       });
 
