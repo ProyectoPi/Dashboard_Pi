@@ -6,7 +6,7 @@ Wants=network-online.target
 [Container]
 ContainerName=dashboard_pi
 # ⚠️  Reemplaza <usuario> y <DIGEST> con el valor del job summary de GitHub Actions
-Image=ghcr.io/proyectopi/dashboard_pi@sha256:5f13ad51fd959938d7ebc6662c194c41995f4a652f1bb79e4aba3055cf042152
+Image=ghcr.io/proyectopi/dashboard_pi@sha256:4ae01cb94d0c3a8ed8480c53eb7e4d74081fc4d48605f317336f4714f95e0f18
 Network=internal.network
 Volume=dashboard_pi_data:/data:z
 EnvironmentFile=/root/dashboard_pi.env
