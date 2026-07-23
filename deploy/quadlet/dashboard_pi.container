@@ -1,0 +1,20 @@
+[Unit]
+Description=Dashboard PI (Flask) - prod
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+ContainerName=dashboard_pi
+# ⚠️  Reemplaza <usuario> y <DIGEST> con el valor del job summary de GitHub Actions
+Image=ghcr.io/<usuario>/dashboard_pi@sha256:<DIGEST>
+Network=internal.network
+Volume=dashboard_pi_data:/data:z
+EnvironmentFile=/root/dashboard_pi.env
+# AuthFile=/etc/containers/auth.json   # SOLO si el paquete GHCR es privado (ver Fase 4.2)
+PodmanArgs=--memory=384m --cpus=0.6
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
