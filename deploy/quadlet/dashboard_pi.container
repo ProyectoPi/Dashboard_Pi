@@ -10,8 +10,7 @@ Image=ghcr.io/proyectopi/dashboard_pi@sha256:5f13ad51fd959938d7ebc6662c194c41995
 Network=internal.network
 Volume=dashboard_pi_data:/data:z
 EnvironmentFile=/root/dashboard_pi.env
-# AuthFile=/etc/containers/auth.json   # SOLO si el paquete GHCR es privado (ver Fase 4.2)
-PodmanArgs=--memory=384m --cpus=0.6
+PodmanArgs=--memory=384m --cpus=0.6 --authfile /etc/containers/auth.json
 
 [Service]
 Restart=always
